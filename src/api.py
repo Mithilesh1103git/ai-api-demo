@@ -19,8 +19,8 @@ MCP_SERVER_PORT = os.getenv("MCP_SERVER_PORT", "8080")
 
 app = FastAPI()
 
-origins = ["http://localhost:5200", "http://127.0.0.1:5200", 
-           "http://0.0.0.0:5200", "http://my.dev.experiments:5200"]
+origins = ["http://localhost:80", "http://127.0.0.1:80", 
+           "http://0.0.0.0:80", "http://my.dev.experiments:80"]
 
 app.add_middleware(
     CORSMiddleware,
