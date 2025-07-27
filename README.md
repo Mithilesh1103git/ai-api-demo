@@ -1,5 +1,7 @@
 Usage SOP:
 
+    Source code: /src
+
     Step 1: First run MCP server with command:
     `python3 llm_fastmcp.py`
     
