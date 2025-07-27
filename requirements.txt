@@ -1,0 +1,7 @@
+fastmcp
+fastapi
+langchain
+langchain-community
+flake8
+pytest
+pytest-asyncio
