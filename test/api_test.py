@@ -45,7 +45,8 @@ def test_llm_stream(client):
     response = client.get("/test-llm-response")
     assert response.status_code == 200
 
-    lines = list(response.iter_lines())
-    assert any(b'"event": "test_event"' in line for line in lines)
-    assert any(b'"data": "test_data"' in line for line in lines)
-    assert any(b"[done]" in line for line in lines)
+    lines = [line.decode('utf-8') for line in response.iter_lines()]
+
+    assert any('"event": "test_event"' in line for line in lines)
+    assert any('"data": "test_data"' in line for line in lines)
+    assert any("[done]" in line for line in lines)
