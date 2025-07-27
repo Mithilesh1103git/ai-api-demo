@@ -5,9 +5,7 @@ import os
 
 import pytest
 import pytest_asyncio
-
 from fastmcp import Client, FastMCP
-
 
 API_SERVER_HOST = os.getenv("API_SERVER_HOST", "localhost")
 API_SERVER_PORT = int(os.getenv("API_SERVER_PORT", "8081"))
