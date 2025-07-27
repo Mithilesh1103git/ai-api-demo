@@ -33,7 +33,7 @@ async def mcp_server():
 async def test_tool_functionality(mcp_server):
     async with Client(mcp_server) as client:
         result = await client.call_tool("echo", arguments={})
-        assert json.loads(result[0].text)["data_events"][0]["v"] == "test value output" # type: ignore
+        assert json.loads(result.content[0].text)["data_events"][0]["v"] == "test value output" # type: ignore
 
 
 # if __name__ == "__main__":
