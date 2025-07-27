@@ -3,14 +3,18 @@ import datetime
 import json
 import os
 
+import pytest
+import pytest_asyncio
+
 from fastmcp import Client, FastMCP
+
 
 API_SERVER_HOST = os.getenv("API_SERVER_HOST", "localhost")
 API_SERVER_PORT = int(os.getenv("API_SERVER_PORT", "8081"))
 MCP_SERVER_HOST = os.getenv("MCP_SERVER_HOST", "localhost")
 MCP_SERVER_PORT = os.getenv("MCP_SERVER_PORT", "8080")
 
-
+@pytest_asyncio.fixture()
 async def mcp_server():
     mcp = FastMCP(name='test client')
 
@@ -25,14 +29,12 @@ async def mcp_server():
 
     return mcp
 
-
-async def test_tool_functionality():
-    mcp = await mcp_server()
-    async with Client(mcp) as client:
+@pytest.mark.asyncio
+async def test_tool_functionality(mcp_server):
+    async with Client(mcp_server) as client:
         result = await client.call_tool("echo", arguments={})
-        assert json.loads(result[0].text)["data_events"][0]["v"] == "test value output" # type: ignore
-        print("✅ Test passed!")
+        assert json.loads(result[0].text)["data_events"][0]["v"] == "test value output"
 
 
-if __name__ == "__main__":
-    asyncio.run(test_tool_functionality())
+# if __name__ == "__main__":
+#     asyncio.run(test_tool_functionality())
