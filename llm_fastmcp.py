@@ -5,31 +5,30 @@ import datetime
 import json
 import os
 
-from dotenv import load_dotenv
 from mcp.server.fastmcp import FastMCP
 
-load_dotenv()
+from openai_client import ask_openai
+
 print(os.getenv("MCP_SERVER_HOST"), os.getenv("MCP_SERVER_PORT"))
+
 MCP_SERVER_HOST = os.getenv("MCP_SERVER_HOST")
 MCP_SERVER_PORT = os.getenv("MCP_SERVER_PORT", "8080")
 
 # mcp = FastMCP("LLM_APP", host=MCP_SERVER_HOST, port=MCP_SERVER_PORT)
 mcp = FastMCP("LLM_APP", port=MCP_SERVER_PORT)
 
-# Important Note: This following is openai implementation which can be used in real world scenarios.
-# async def ask_openai(prompt, model="text-davinci-003", max_tokens=150):
-#     client = OpenAI()
-
-#     completion = client.chat.completions.create(
-#         model="gpt-3.5-turbo",
-#         messages=[
-#             {"role": "system", "content": "You are a helpful assistant."},
-#             {"role": "user", "content": "Hello!"}
-#             ]
-#     )
-
-#     # print(completion.choices[0].message)
-#     return completion.choices[0].message
+async def get_openai_response(prompt: str) -> str:
+    """
+    Function to get response from OpenAI. We will use this function to
+    get response from OpenAI and return it as a string.
+    This function can be used in real world scenarios where you want to get response from OpenAI
+    and return it as a string.
+    """
+    try:
+        response = await ask_openai(prompt)
+        return response
+    except Exception as e:
+        return f"Error: {str(e)}"
 
 data_events = [
     {"font-weight": "normal", "v": "Differentiation is the process of finding a derivative—a tool that tells us how fast a quantity is changing at any given point."},
@@ -75,9 +74,9 @@ def add_timestamp(text) -> str:
 
 
 @mcp.tool()
-def echo(text) -> str:
-    """sample text generator"""
-    response_str = json.dumps({"query": text, "data_events": data_events})
+def echo() -> str:
+    """sample text generator. If real world scenario, this can be used to call OpenAI API."""
+    response_str = json.dumps({"data_events": data_events})
     return response_str
 
 
