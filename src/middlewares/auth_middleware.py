@@ -1,8 +1,11 @@
-from fastapi.requests import Request
+from starlette.authentication import (AuthCredentials, AuthenticationBackend,
+                                      BaseUser)
 from starlette.middleware.base import BaseHTTPMiddleware
-from starlette.authentication import AuthCredentials, BaseUser, AuthenticationBackend
+
 
 class CustomUser(BaseUser):
+    __slots__ = ('user_name', 'role')
+
     def __init__(self, username: str, role: str):
         self.user_name = username
         self.role = role

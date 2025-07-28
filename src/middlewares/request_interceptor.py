@@ -1,6 +1,7 @@
 from fastapi.requests import Request
 from starlette.middleware.base import BaseHTTPMiddleware
 
+
 class CustomRequestInterceptorMw(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         # request_body = await request.body()

@@ -1,25 +1,23 @@
 import json
 import os
-import random
+import secrets
 import time
+from string import ascii_lowercase, digits, punctuation
 
 import httpx
-from torch import Value
 import uvicorn
-from typing import Sequence
-from fastapi import FastAPI, Depends, status
+from fastapi import Depends, FastAPI, status
 from fastapi.exceptions import HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import StreamingResponse
 from fastapi.requests import Request
-from middlewares.request_interceptor import CustomRequestInterceptorMw
-from middlewares.auth_middleware import CustomAuthenticationBackend
-from middlewares.session_middleware import CustomSessionCheckerMiddleware
+from fastapi.responses import StreamingResponse
 from starlette.middleware.authentication import AuthenticationMiddleware
 from starlette.middleware.sessions import SessionMiddleware
+
+from middlewares.auth_middleware import CustomAuthenticationBackend
+from middlewares.request_interceptor import CustomRequestInterceptorMw
+from middlewares.session_middleware import CustomSessionCheckerMiddleware
 from model_langchain import chain
-import secrets
-from string import ascii_lowercase, digits, punctuation
 
 API_SERVER_HOST = os.getenv("API_SERVER_HOST", "localhost")
 API_SERVER_PORT = int(os.getenv("API_SERVER_PORT", "8081"))

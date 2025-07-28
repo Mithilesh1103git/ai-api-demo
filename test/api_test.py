@@ -1,9 +1,10 @@
 import json
 import time
+
 import pytest
 from fastapi import FastAPI
-from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 from fastapi.testclient import TestClient
 
 app = FastAPI()

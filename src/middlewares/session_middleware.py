@@ -1,7 +1,8 @@
 from fastapi import status
-from fastapi.requests import Request
 from fastapi.exceptions import HTTPException
+from fastapi.requests import Request
 from starlette.middleware.base import BaseHTTPMiddleware
+
 
 class CustomSessionCheckerMiddleware(BaseHTTPMiddleware):
 
