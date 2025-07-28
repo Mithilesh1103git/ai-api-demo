@@ -14,8 +14,12 @@ from fastapi.responses import StreamingResponse
 from fastapi.requests import Request
 from middlewares.request_interceptor import CustomRequestInterceptorMw
 from middlewares.auth_middleware import CustomAuthenticationBackend
+from middlewares.session_middleware import CustomSessionCheckerMiddleware
 from starlette.middleware.authentication import AuthenticationMiddleware
+from starlette.middleware.sessions import SessionMiddleware
 from model_langchain import chain
+import secrets
+from string import ascii_lowercase, digits, punctuation
 
 API_SERVER_HOST = os.getenv("API_SERVER_HOST", "localhost")
 API_SERVER_PORT = int(os.getenv("API_SERVER_PORT", "8081"))
@@ -31,6 +35,14 @@ origins = [
     "http://my.dev.experiments:80",
 ]
 
+internal_key_suffix = '@my-test-key'
+first_layer = internal_key_suffix + ''.join(secrets.choice(punctuation + ascii_lowercase + digits) for _ in range(1000))
+auth_mw_secret_key = ''.join(secrets.choice(first_layer + ascii_lowercase + digits) for _ in range(25)) + internal_key_suffix
+
+app.add_middleware(CustomRequestInterceptorMw)
+app.add_middleware(CustomSessionCheckerMiddleware)
+app.add_middleware(SessionMiddleware, secret_key=auth_mw_secret_key)
+app.add_middleware(AuthenticationMiddleware, backend=CustomAuthenticationBackend())
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -38,9 +50,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-app.add_middleware(CustomRequestInterceptorMw)
-app.add_middleware(AuthenticationMiddleware, backend=CustomAuthenticationBackend())
 
 
 def get_auth_validation(role: str):
