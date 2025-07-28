@@ -13,6 +13,7 @@ class CustomSessionCheckerMiddleware(BaseHTTPMiddleware):
             if "session_id" not in request.session.keys():
                 request.session["session_id"] = "my-test-session-id"
                 request.state.session_alive = True
+                print("request session not found, adding one now.")
             else:
                 print(f"request session id: {request.session.get("session-id")}")
         else:

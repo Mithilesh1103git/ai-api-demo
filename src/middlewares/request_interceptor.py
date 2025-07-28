@@ -9,8 +9,8 @@ class CustomRequestInterceptorMw(BaseHTTPMiddleware):
         if 'authorization' in request.headers.keys():
             request.state.user = {"username": "alice", "role": "admin", "is_authenticated": True}
 
-        request_elements = request.items()
-        print([e for e in request_elements])
+        # request_elements = request.items()
+        # print([e for e in request_elements])
         # print(vars(request.state))
         
         return await call_next(request)
