@@ -102,9 +102,7 @@ def get_llm_response(request: Request):
 
         yield "data: [done]\n\n"
 
-    return StreamingResponse(
-        generate_response_content(), media_type="text/event-stream"
-    )
+    return StreamingResponse(generate_response_content(), media_type="text/event-stream")
 
 
 if __name__ == "__main__":
