@@ -75,7 +75,16 @@ def get_auth_validation(role: str):
     raise ValueError("Unsupported role.")
 
 
-@app.get("/get-llm-response", dependencies=[get_auth_validation(role="user")])
+def get_session_validation():
+    def dependency_require_sessionid(request: Request):
+        if not request.session or not request.session.get("session_id"):
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Session not found.")
+        return request.session
+    return Depends(dependency_require_sessionid)
+
+
+@app.get("/get-llm-response", dependencies=[get_auth_validation(role="user"), 
+                                            get_session_validation()])
 def get_llm_response(request: Request):
     """
     Main function to get LLM model inference responses.

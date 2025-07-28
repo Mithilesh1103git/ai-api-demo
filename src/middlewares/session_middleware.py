@@ -12,6 +12,7 @@ class CustomSessionCheckerMiddleware(BaseHTTPMiddleware):
         if request.user.is_authenticated:
             if "session_id" not in request.session.keys():
                 request.session["session_id"] = "my-test-session-id"
+                request.state.session_alive = True
         else:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="User not authenticated. Session can not be granted.")
 
