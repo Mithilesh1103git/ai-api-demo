@@ -7,12 +7,14 @@ class CustomSessionCheckerMiddleware(BaseHTTPMiddleware):
 
     async def dispatch(self, request: Request, call_next):
 
-        print(f"request.session: {request.session}")
+        # print(f"request session: {request.session}")
         
         if request.user.is_authenticated:
             if "session_id" not in request.session.keys():
                 request.session["session_id"] = "my-test-session-id"
                 request.state.session_alive = True
+            else:
+                print(f"request session id: {request.session.get("session-id")}")
         else:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="User not authenticated. Session can not be granted.")
 

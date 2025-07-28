@@ -24,7 +24,7 @@ class CustomAuthenticationBackend(AuthenticationBackend):
         # print(conn)
 
         if 'authorization' in conn.headers.keys():
-            print("Auth header found by auth mw")
+            print("Auth header found.")
             auth_creds = AuthCredentials(["authenticated", "user"])
             user_details = CustomUser(username="Mithilesh", role="SuperAdmin")
             return auth_creds, user_details
