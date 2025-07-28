@@ -37,6 +37,7 @@ class FastMCPClientLLM(LLM):
     """
     FastMCP client for LangChain.
     """
+
     endpoint: str = f"http://{MCP_SERVER_HOST}:{MCP_SERVER_PORT}/sse"
     tool_name: str = "tool://echo"
 
@@ -84,4 +85,4 @@ def test_chain():
     print(type(response))
     print(json.loads(response))
 
-test_chain()
+# test_chain()

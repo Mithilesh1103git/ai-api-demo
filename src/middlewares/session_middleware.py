@@ -13,8 +13,9 @@ class CustomSessionCheckerMiddleware(BaseHTTPMiddleware):
             if "session_id" not in request.session.keys():
                 request.session["session_id"] = "my-test-session-id"
                 request.state.session_alive = True
-                print("request session not found, adding one now.")
+                print("Session ID not found, adding one now.")
             else:
+                print("Session ID found.")
                 print(f"request session id: {request.session.get("session-id")}")
         else:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="User not authenticated. Session can not be granted.")
