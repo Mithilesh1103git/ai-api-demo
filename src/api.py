@@ -4,7 +4,6 @@ import secrets
 import time
 from string import ascii_lowercase, digits, punctuation
 
-import httpx
 import uvicorn
 from fastapi import Depends, FastAPI, status
 from fastapi.exceptions import HTTPException
