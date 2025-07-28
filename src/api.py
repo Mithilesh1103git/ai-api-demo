@@ -66,7 +66,7 @@ def get_auth_validation(role: str):
     raise ValueError("Unsupported role.")
 
 
-@app.get("/get-llm-response", dependencies=[get_auth_validation(role="admin")])
+@app.get("/get-llm-response", dependencies=[get_auth_validation(role="user")])
 def get_llm_response(request: Request):
     """
     Main function to get LLM model inference responses.
