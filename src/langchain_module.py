@@ -57,7 +57,9 @@ class FastMCPClientLLM(LLM):
         run_manager: Optional[CallbackManagerForLLMRun] = None,
         **kwargs: Any,
     ) -> str:
-        return await call_mcp(endpoint=self.endpoint, tool_name=self.tool_name, prompt=prompt)
+        return await call_mcp(
+            endpoint=self.endpoint, tool_name=self.tool_name, prompt=prompt
+        )
 
 
 llm_add_timestamp = FastMCPClientLLM(
