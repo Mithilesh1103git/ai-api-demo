@@ -1,11 +1,12 @@
 """
 Main LLM MCP server
 """
+
 import datetime
 import json
 import os
 
-from mcp.server.fastmcp import FastMCP
+from fastmcp import FastMCP
 
 from openai_client import ask_openai
 
@@ -15,7 +16,7 @@ MCP_SERVER_HOST = os.getenv("MCP_SERVER_HOST")
 MCP_SERVER_PORT = os.getenv("MCP_SERVER_PORT", "8080")
 
 # mcp = FastMCP("LLM_APP", host=MCP_SERVER_HOST, port=MCP_SERVER_PORT)
-mcp = FastMCP("LLM_APP", port=MCP_SERVER_PORT)
+mcp = FastMCP("LLM_APP", port=int(MCP_SERVER_PORT))
 
 async def get_openai_response(prompt: str) -> str:
     """
@@ -30,8 +31,12 @@ async def get_openai_response(prompt: str) -> str:
     except Exception as e:
         return f"Error: {str(e)}"
 
+
 data_events = [
-    {"font-weight": "normal", "v": "Differentiation is the process of finding a derivative—a tool that tells us how fast a quantity is changing at any given point."},
+    {
+        "font-weight": "normal",
+        "v": "Differentiation is the process of finding a derivative—a tool that tells us how fast a quantity is changing at any given point.",
+    },
     {"font-weight": "bold", "v": "🔧 Common Rules:"},
     {"font-weight": "normal", "v": "1). Power Rule:"},
     {"font-weight": "normal", "v": "d/dx(xⁿ) = n·xⁿ⁻¹"},
@@ -48,11 +53,24 @@ data_events = [
     {"font-weight": "normal", "v": "- For sketching graphs with precision"},
     {"font-weight": "bold", "v": "🗂️ Quick Comparison Table"},
     {"font-weight": "normal", "v": "Topic\tWhat It Means\tGraphically Looks Like"},
-    {"font-weight": "normal", "v": "Limit\tApproach a value as x → point\tMatching behavior from both sides"},
-    {"font-weight": "normal", "v": "Continuity\tNo breaks or jumps\tSmooth and connected graph"},
-    {"font-weight": "normal", "v": "Differentiability\tSlope exists and is defined\tNo sharp corners or spikes"},
-    {"font-weight": "normal", "v": "Differentiation\tCalculating the rate of change\tTangent slope at a point"},
+    {
+        "font-weight": "normal",
+        "v": "Limit\tApproach a value as x → point\tMatching behavior from both sides",
+    },
+    {
+        "font-weight": "normal",
+        "v": "Continuity\tNo breaks or jumps\tSmooth and connected graph",
+    },
+    {
+        "font-weight": "normal",
+        "v": "Differentiability\tSlope exists and is defined\tNo sharp corners or spikes",
+    },
+    {
+        "font-weight": "normal",
+        "v": "Differentiation\tCalculating the rate of change\tTangent slope at a point",
+    },
 ]
+
 
 @mcp.tool()
 def add(a: int, b: int) -> int:
@@ -63,13 +81,13 @@ def add(a: int, b: int) -> int:
 @mcp.tool()
 def multiply(a: int, b: int) -> int:
     """Multiply two numbers"""
-    return a*b
+    return a * b
 
 
 @mcp.tool()
 def add_timestamp(text) -> str:
     """Multiply tw o numbers"""
-    timestamp_section = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    timestamp_section = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     return "You have queries the question - " + text + f"at time : {timestamp_section}"
 
 

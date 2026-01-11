@@ -8,9 +8,9 @@ async def ask_openai(prompt, model="gpt-3.5-turbo", max_tokens=150) -> str:
     completion = client.chat.completions.create(
         model=model,
         messages=[
-                {"role": "system", "content": "can you help me with my queries?"},
-                {"role": "user", "content": prompt}
-            ]
+            {"role": "system", "content": "can you help me with my queries?"},
+            {"role": "user", "content": prompt},
+        ],
     )
 
     # print(completion.choices[0].message)
