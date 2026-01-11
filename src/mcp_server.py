@@ -7,6 +7,7 @@ import json
 import os
 
 from fastmcp import FastMCP
+from mcp.types import TextContent
 
 from openai_client import ask_openai
 
@@ -93,10 +94,11 @@ def add_timestamp(text) -> str:
 
 
 @mcp.tool()
-def echo() -> str:
+def echo() -> TextContent:
     """sample text generator. If real world scenario, this can be used to call OpenAI API."""
     response_str = json.dumps({"data_events": data_events})
-    return response_str
+    return TextContent(type="text", text=f"Result: {response_str}")
+    # return response_str
 
 
 if __name__ == "__main__":

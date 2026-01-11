@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 from fastmcp.client import Client
 from langchain_core.callbacks.manager import CallbackManagerForLLMRun
 from langchain_core.language_models.llms import LLM
-from langchain_core.prompts import PromptTemplate
+from langchain_core.prompts import PromptTemplate, StringPromptTemplate
 
 load_dotenv()
 MCP_SERVER_HOST = os.getenv("MCP_SERVER_HOST")
@@ -16,15 +16,19 @@ MCP_SERVER_PORT = os.getenv("MCP_SERVER_PORT", "8080")
 MCP_SERVER_HOST = "localhost"
 
 
-async def call_mcp(endpoint: str, tool_name: str, prompt: str) -> str:
-    # print(endpoint)
+async def call_mcp(endpoint, tool_name, prompt):
     async with Client(endpoint) as client:
-        result = await client.call_tool(name=tool_name, arguments={"text": prompt})
-        # print("Result:", result[0])
-        if hasattr(result[0], "text"):
-            return str(result[0].text)  # type: ignore
-        else:
-            return str(result[0])
+        # name must be just "echo", arguments must match the server function parameter
+        # print(f"Printing prompt before calling mcp: {prompt}")
+        try:
+            result = await client.call_tool(name=tool_name, arguments={})
+
+            # Extract text from the first content block
+            if result.content and hasattr(result.content[0], 'text'):
+                return result.content[0].text
+            return str(result.data)  # Fallback for structured data
+        except Exception as e:
+            print(f"MCP tool call exception: {e}")
 
 
 class FastMCPClientLLM(LLM):
@@ -33,7 +37,7 @@ class FastMCPClientLLM(LLM):
     """
 
     endpoint: str = f"http://{MCP_SERVER_HOST}:{MCP_SERVER_PORT}/sse"
-    tool_name: str = "tool://echo"
+    tool_name: str = "echo"
 
     @property
     def _llm_type(self) -> str:
@@ -73,7 +77,9 @@ main_llm = FastMCPClientLLM(
 )
 
 # Define a prompt template
-prompt_template = PromptTemplate(input_variables=["message"], template="{message}")
+prompt_template = PromptTemplate.from_template(template="{message}",
+                                               template_format="f-string",
+                                               partial_variables={"message": "sample text"})
 
 # Create LangChain chain
 chain = prompt_template | main_llm
