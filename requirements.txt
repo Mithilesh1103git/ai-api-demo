@@ -1,7 +1,10 @@
 fastmcp
 fastapi
+langchain_core
 langchain
 langchain-community
+black
+isort
 flake8
 pytest
 pytest-asyncio

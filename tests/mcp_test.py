@@ -14,10 +14,10 @@ MCP_SERVER_PORT = os.getenv("MCP_SERVER_PORT", "8080")
 
 @pytest_asyncio.fixture()
 async def mcp_server():
-    mcp = FastMCP(name='test client')
+    mcp = FastMCP(name='tests client')
 
     data_events = [
-        {"font-weight": "normal", "v": "test value output"},
+        {"font-weight": "normal", "v": "tests value output"},
     ]
 
     @mcp.tool()
@@ -31,7 +31,7 @@ async def mcp_server():
 async def test_tool_functionality(mcp_server):
     async with Client(mcp_server) as client:
         result = await client.call_tool("echo", arguments={})
-        assert json.loads(result.content[0].text)["data_events"][0]["v"] == "test value output" # type: ignore
+        assert json.loads(result.content[0].text)["data_events"][0]["v"] == "tests value output" # type: ignore
 
 
 # if __name__ == "__main__":
