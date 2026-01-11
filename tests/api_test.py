@@ -23,7 +23,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/test-llm-response")
+@app.get("/tests-llm-response")
 def get_llm_response():
     def generate_response_content():
         response = '{"data_events": [{"event": "test_event", "data": "test_data"}], "query": "test_query"}'
@@ -42,7 +42,7 @@ def client():
     return TestClient(app)
 
 def test_llm_stream(client):
-    response = client.get("/test-llm-response")
+    response = client.get("/tests-llm-response")
     assert response.status_code == 200
 
     # lines = [line for line in response.iter_lines()]

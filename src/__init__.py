@@ -9,7 +9,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 
-from src.langchain_module import chain
+from src.langchain_module import chain, run_chain
 
 API_SERVER_HOST = os.getenv("API_SERVER_HOST", "localhost")
 API_SERVER_PORT = int(os.getenv("API_SERVER_PORT", "8081"))
@@ -40,8 +40,8 @@ def get_llm_response():
     Main function to get LLM model inference responses.
     """
 
-    def generate_response_content():
-        response = chain.invoke({"message": f"Hello from LangChain to FastMCP!"})
+    async def generate_response_content():
+        response = await chain.ainvoke({"message": f"Hello from LangChain to FastMCP!"})
         response_json = json.loads(response)
 
         query = response_json.get("query", "")
@@ -59,6 +59,5 @@ def get_llm_response():
     )
 
 
-if __name__ == "__main__":
-    # uvicorn.run(app=app, host=API_SERVER_HOST, port=API_SERVER_PORT)
-    uvicorn.run(app=app, port=API_SERVER_PORT)
+# if __name__ == "__main__":
+#     uvicorn.run(app=app, port=API_SERVER_PORT)

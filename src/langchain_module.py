@@ -46,9 +46,18 @@ class FastMCPClientLLM(LLM):
         run_manager: Optional[CallbackManagerForLLMRun] = None,
         **kwargs: Any,
     ) -> str:
-        return asyncio.get_event_loop().run_until_complete(
+        return asyncio.get_running_loop().run_until_complete(
             call_mcp(endpoint=self.endpoint, tool_name=self.tool_name, prompt=prompt)
         )
+
+    async def _acall(
+        self,
+        prompt: str,
+        stop: Optional[List[str]] = None,
+        run_manager: Optional[CallbackManagerForLLMRun] = None,
+        **kwargs: Any,
+    ) -> str:
+        return await call_mcp(endpoint=self.endpoint, tool_name=self.tool_name, prompt=prompt)
 
 
 llm_add_timestamp = FastMCPClientLLM(
@@ -62,19 +71,19 @@ main_llm = FastMCPClientLLM(
 )
 
 # Define a prompt template
-prompt = PromptTemplate(input_variables=["message"], template="{message}")
+prompt_template = PromptTemplate(input_variables=["message"], template="{message}")
 
 # Create LangChain chain
-chain = prompt | main_llm
+chain = prompt_template | main_llm
 # chain = prompt | llm_add_timestamp | main_llm
 # chain = prompt | llm_add_timestamp | main_llm | JsonOutputParser()
 
 
-def test_chain():
+async def run_chain(message: str):
     # Run the chain
-    response = chain.invoke({"message": f"Hello from LangChain to FastMCP!"})
+    response = await chain.ainvoke({"message": message})
     print(type(response))
     print(json.loads(response))
 
 
-test_chain()
+# asyncio.get_running_loop().run_until_complete(run_chain(f"Hello from LangChain to FastMCP!"))
