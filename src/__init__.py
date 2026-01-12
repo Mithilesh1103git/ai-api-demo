@@ -49,7 +49,7 @@ def get_llm_response():
             raise e
         response_json = json.loads(response)
 
-        yield "data: [begin]\n\n"
+        yield f"event: status\ndata: [begin]\n\n"
 
         query = response_json.get("query", "")
         if query:
@@ -60,7 +60,7 @@ def get_llm_response():
             yield f"event: message\ndata: {json.dumps(event)}\n\n"
             time.sleep(0.1)
 
-        yield "data: [done]\n\n"
+        yield f"event: status\ndata: [done]\n\n"
 
     return StreamingResponse(
         generate_response_content(), media_type="text/event-stream"
