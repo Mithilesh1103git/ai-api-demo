@@ -92,7 +92,9 @@ def multiply(a: int, b: int) -> CallToolResult:
 def add_timestamp(text) -> CallToolResult:
     """Multiply tw o numbers"""
     timestamp_section = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    response_text = "You have queries the question - " + text + f"at time : {timestamp_section}"
+    response_text = (
+        "You have queries the question - " + text + f"at time : {timestamp_section}"
+    )
     return CallToolResult(content=[TextContent(type="text", text=response_text)])
 
 

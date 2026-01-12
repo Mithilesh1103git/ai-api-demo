@@ -24,7 +24,6 @@ async def call_mcp(endpoint, tool_name, prompt):
         # print(f"Printing prompt before calling mcp: {prompt}")
         try:
             result = await client.call_tool(name=tool_name, arguments={})
-            result_content = result.structured_content["content"]
 
             # Extract text from the first content block
             for content_block in result.content:
