@@ -7,7 +7,7 @@ import json
 import os
 
 from fastmcp import FastMCP
-from mcp.types import TextContent, CallToolResult
+from mcp.types import CallToolResult, TextContent
 
 from openai_client import ask_openai
 

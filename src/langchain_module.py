@@ -6,10 +6,11 @@ from typing import Any, List, Optional
 
 from dotenv import load_dotenv
 from fastmcp.client import Client
-from mcp.types import TextContent, ToolResultContent
 from langchain_core.callbacks.manager import CallbackManagerForLLMRun
 from langchain_core.language_models.llms import LLM
-from langchain_core.prompts import PromptTemplate, StringPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.prompts import PromptTemplate
+from mcp.types import TextContent, ToolResultContent
 
 load_dotenv()
 MCP_SERVER_HOST = os.getenv("MCP_SERVER_HOST")
@@ -26,10 +27,16 @@ async def call_mcp(endpoint, tool_name, prompt):
             result_content = result.structured_content["content"]
 
             # Extract text from the first content block
-            if result_content and "text" in result_content[0].keys():
-                return result_content[0].text
+            for content_block in result.content:
+                if content_block.type == "text":
+                    # Access the string data
+                    if isinstance(content_block.text, str):
+                        content_block_dict = json.loads(content_block.text)
+                        if isinstance(content_block_dict, dict):
+                            return content_block_dict["content"][0]["text"]
+
             return str(
-                result.structured_content["content"][0]
+                {"data_events": "no response found."}
             )  # Fallback for structured data
         except Exception as e:
             print(f"MCP tool call exception: {e}")
@@ -88,16 +95,16 @@ prompt_template = PromptTemplate.from_template(
 )
 
 # Create LangChain chain
-chain = prompt_template | main_llm
+chain = prompt_template | main_llm | StrOutputParser()
 # chain = prompt | llm_add_timestamp | main_llm
 # chain = prompt | llm_add_timestamp | main_llm | JsonOutputParser()
 
 
-async def run_chain(message: str):
-    # Run the chain
-    response = await chain.ainvoke({"message": message})
-    print(type(response))
-    print(json.loads(response))
+# async def run_chain(message: str):
+#     # Run the chain
+#     response = await chain.ainvoke({"message": message})
+#     print(type(response))
+#     print(json.loads(response))
 
 
 # asyncio.get_running_loop().run_until_complete(run_chain(f"Hello from LangChain to FastMCP!"))

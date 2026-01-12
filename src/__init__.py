@@ -9,7 +9,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 
-from src.langchain_module import chain, run_chain
+from src.langchain_module import chain
 
 API_SERVER_HOST = os.getenv("API_SERVER_HOST", "localhost")
 API_SERVER_PORT = int(os.getenv("API_SERVER_PORT", "8081"))
@@ -45,7 +45,6 @@ def get_llm_response():
             response = await chain.ainvoke(
                 {"message": f"Hello from LangChain to FastMCP!"}
             )
-            # print(f"ResponseType: {type(response)}, ResponseContent: {response}, has_attr: {hasattr(response, 'text')}")
         except Exception as e:
             raise e
         response_json = json.loads(response)
