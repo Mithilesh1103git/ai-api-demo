@@ -75,29 +75,32 @@ data_events = [
 
 
 @mcp.tool()
-def add(a: int, b: int) -> int:
+def add(a: int, b: int) -> CallToolResult:
     """Add two numbers"""
-    return a + b
+    response_text = str(a + b)
+    return CallToolResult(content=[TextContent(type="text", text=response_text)])
 
 
 @mcp.tool()
-def multiply(a: int, b: int) -> int:
+def multiply(a: int, b: int) -> CallToolResult:
     """Multiply two numbers"""
-    return a * b
+    response_text = str(a * b)
+    return CallToolResult(content=[TextContent(type="text", text=response_text)])
 
 
 @mcp.tool()
-def add_timestamp(text) -> str:
+def add_timestamp(text) -> CallToolResult:
     """Multiply tw o numbers"""
     timestamp_section = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    return "You have queries the question - " + text + f"at time : {timestamp_section}"
+    response_text = "You have queries the question - " + text + f"at time : {timestamp_section}"
+    return CallToolResult(content=[TextContent(type="text", text=response_text)])
 
 
 @mcp.tool()
 def echo() -> CallToolResult:
     """sample text generator. If real world scenario, this can be used to call OpenAI API."""
-    response_str = json.dumps({"data_events": data_events})
-    return CallToolResult(content=[TextContent(type="text", text=response_str)])
+    response_text = json.dumps({"data_events": data_events})
+    return CallToolResult(content=[TextContent(type="text", text=response_text)])
 
 
 if __name__ == "__main__":
