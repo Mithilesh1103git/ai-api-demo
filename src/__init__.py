@@ -14,7 +14,7 @@ from src.langchain_module import chain, run_chain
 API_SERVER_HOST = os.getenv("API_SERVER_HOST", "localhost")
 API_SERVER_PORT = int(os.getenv("API_SERVER_PORT", "8081"))
 MCP_SERVER_HOST = os.getenv("MCP_SERVER_HOST", "localhost")
-MCP_SERVER_PORT = os.getenv("MCP_SERVER_PORT", "8080")
+MCP_SERVER_PORT = int(os.getenv("MCP_SERVER_PORT", "8080"))
 
 app = FastAPI()
 
@@ -41,11 +41,20 @@ def get_llm_response():
     """
 
     async def generate_response_content():
-        response = await chain.ainvoke({"message": f"Hello from LangChain to FastMCP!"})
+        try:
+            response = await chain.ainvoke(
+                {"message": f"Hello from LangChain to FastMCP!"}
+            )
+            # print(f"ResponseType: {type(response)}, ResponseContent: {response}, has_attr: {hasattr(response, 'text')}")
+        except Exception as e:
+            raise e
         response_json = json.loads(response)
 
+        yield "data: [begin]\n\n"
+
         query = response_json.get("query", "")
-        yield f"event: message\ndata: {json.dumps(query)}\n\n"
+        if query:
+            yield f"event: message\ndata: {json.dumps(query)}\n\n"
 
         data_events = response_json.get("data_events", [])
         for event in data_events:

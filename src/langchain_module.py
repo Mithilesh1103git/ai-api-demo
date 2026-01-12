@@ -6,6 +6,7 @@ from typing import Any, List, Optional
 
 from dotenv import load_dotenv
 from fastmcp.client import Client
+from mcp.types import TextContent, ToolResultContent
 from langchain_core.callbacks.manager import CallbackManagerForLLMRun
 from langchain_core.language_models.llms import LLM
 from langchain_core.prompts import PromptTemplate, StringPromptTemplate
@@ -22,11 +23,14 @@ async def call_mcp(endpoint, tool_name, prompt):
         # print(f"Printing prompt before calling mcp: {prompt}")
         try:
             result = await client.call_tool(name=tool_name, arguments={})
+            result_content = result.structured_content["content"]
 
             # Extract text from the first content block
-            if result.content and hasattr(result.content[0], 'text'):
-                return result.content[0].text
-            return str(result.data)  # Fallback for structured data
+            if result_content and "text" in result_content[0].keys():
+                return result_content[0].text
+            return str(
+                result.structured_content["content"][0]
+            )  # Fallback for structured data
         except Exception as e:
             print(f"MCP tool call exception: {e}")
 
@@ -77,9 +81,11 @@ main_llm = FastMCPClientLLM(
 )
 
 # Define a prompt template
-prompt_template = PromptTemplate.from_template(template="{message}",
-                                               template_format="f-string",
-                                               partial_variables={"message": "sample text"})
+prompt_template = PromptTemplate.from_template(
+    template="{message}",
+    template_format="f-string",
+    partial_variables={"message": "sample text"},
+)
 
 # Create LangChain chain
 chain = prompt_template | main_llm
