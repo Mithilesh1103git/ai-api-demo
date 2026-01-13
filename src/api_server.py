@@ -1,14 +1,14 @@
 import json
 import os
 import time
-from dotenv import load_dotenv
 
 from fastapi import APIRouter
 from fastapi.responses import StreamingResponse
+import asyncio
 
 from src.langchain_module import chain
+from src.health_check import call_mcp
 
-load_dotenv(dotenv_path=r".env")
 API_SERVER_HOST = os.getenv("API_SERVER_HOST", "localhost")
 API_SERVER_PORT = int(os.getenv("API_SERVER_PORT", "8081"))
 MCP_SERVER_HOST = os.getenv("MCP_SERVER_HOST", "localhost")
@@ -48,6 +48,21 @@ def get_llm_response():
         generate_response_content(), media_type="text/event-stream"
     )
 
+
+@main_api_router.get("/mcp-healthcheck/{host}/{port}/{tool_name}")
+def mcp_healthcheck(host: str, port: int, tool_name: str):
+    target_endpoint: str = f"http://{MCP_SERVER_HOST}:{MCP_SERVER_PORT}/sse"
+    target_tool_name: str = "echo"
+    if host and port:
+        target_endpoint: str = f"http://{host}:{port}/sse"
+        target_tool_name: str = tool_name
+    asyncio.run(
+        call_mcp(
+            endpoint=target_endpoint,
+            tool_name=target_tool_name,
+            prompt="test-echo-tool",
+        )
+    )
 
 # if __name__ == "__main__":
 #     uvicorn.run(app=app, port=API_SERVER_PORT)
