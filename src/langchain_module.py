@@ -12,6 +12,7 @@ from langchain_core.prompts import PromptTemplate
 
 API_SERVER_HOST = os.getenv("API_SERVER_HOST", "localhost")
 API_SERVER_PORT = int(os.getenv("API_SERVER_PORT", "8081"))
+MCP_ENDPOINT_TYPE = os.getenv("MCP_ENDPOINT_TYPE", None)
 MCP_SERVER_HOST = os.getenv("MCP_SERVER_HOST", "localhost")
 MCP_SERVER_PORT = int(os.getenv("MCP_SERVER_PORT", "8080"))
 
@@ -21,6 +22,9 @@ print(f"MCP host:port = {MCP_SERVER_HOST}:{MCP_SERVER_PORT} (langchain_module)")
 
 
 async def call_mcp(endpoint, tool_name, prompt):
+    print(f"MCP_ENDPOINT_TYPE: {MCP_ENDPOINT_TYPE}")
+    if MCP_ENDPOINT_TYPE=="file":
+        endpoint = "mcp_server.py"
     async with Client(endpoint) as client:
         # name must be just "echo", arguments must match the server function parameter
         # print(f"Printing prompt before calling mcp: {prompt}")
