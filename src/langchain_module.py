@@ -4,18 +4,20 @@ import json
 import os
 from typing import Any, List, Optional
 
-from dotenv import load_dotenv
 from fastmcp.client import Client
 from langchain_core.callbacks.manager import CallbackManagerForLLMRun
 from langchain_core.language_models.llms import LLM
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import PromptTemplate
-from mcp.types import TextContent, ToolResultContent
 
-load_dotenv()
-MCP_SERVER_HOST = os.getenv("MCP_SERVER_HOST")
-MCP_SERVER_PORT = os.getenv("MCP_SERVER_PORT", "8080")
-MCP_SERVER_HOST = "localhost"
+API_SERVER_HOST = os.getenv("API_SERVER_HOST", "localhost")
+API_SERVER_PORT = int(os.getenv("API_SERVER_PORT", "8081"))
+MCP_SERVER_HOST = os.getenv("MCP_SERVER_HOST", "localhost")
+MCP_SERVER_PORT = int(os.getenv("MCP_SERVER_PORT", "8080"))
+
+
+print(f"API host:port = {API_SERVER_HOST}:{API_SERVER_PORT} (langchain_module)")
+print(f"MCP host:port = {MCP_SERVER_HOST}:{MCP_SERVER_PORT} (langchain_module)")
 
 
 async def call_mcp(endpoint, tool_name, prompt):

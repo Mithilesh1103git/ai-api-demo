@@ -1,0 +1,41 @@
+services:
+
+  mcp_server:
+    build:
+      context: .
+    container_name: mcp_server
+    hostname: mcp_server
+    ports:
+      - "8080:8080"
+    environment:
+      API_SERVER_HOST: "api_server"
+      API_SERVER_PORT: "8081"
+      MCP_SERVER_HOST: "localhost"
+      MCP_SERVER_PORT: "8080"
+    working_dir: "/app"
+    networks:
+      - ai_mcp_api_network
+    command: ["python3", "src/mcp_server.py"]
+
+  api_server:
+    build:
+      context: .
+    container_name: api_server
+    hostname: api_server
+    depends_on:
+      - mcp_server
+    ports:
+      - "8081:8081"
+    environment:
+      API_SERVER_HOST: "localhost"
+      API_SERVER_PORT: "8081"
+      MCP_SERVER_HOST: "api_server"
+      MCP_SERVER_PORT: "8080"
+    working_dir: "/app"
+    networks:
+      - ai_mcp_api_network
+    command: [ "uvicorn", "--host=0.0.0.0", "--port=8081", "src:app" ]
+
+networks:
+  ai_mcp_api_network:
+    driver: bridge
