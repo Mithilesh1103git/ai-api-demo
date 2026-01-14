@@ -28,6 +28,7 @@ services:
     ports:
       - "8081:8081"
     environment:
+      PYTHONPATH: ".:${PYTHONPATH}"
       API_SERVER_HOST: "localhost"
       API_SERVER_PORT: "8081"
       MCP_SERVER_HOST: "api_server"

@@ -6,7 +6,7 @@ Step 1: First run MCP server with command: `python3 src/mcp_server.py`
 
 Step 2: Secondly run api server with command: `uvicorn --host 0.0.0.0 --port 8081 src:app`
 
-Step 3: You can call api in localhost with following command: `curl -X GET http://localhost:8081/get-llm-response`
+Step 3: You can call api in localhost with following command: `curl -X GET http://localhost:8081/api/v1/get-llm-response`
 
 Note:
 1. In real world scenario, LLM MCP server would be calling hosted models
