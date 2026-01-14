@@ -2,12 +2,13 @@ import json
 import os
 import time
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Header
 from fastapi.responses import StreamingResponse
 import asyncio
+from typing import Optional
 
-from src.langchain_module import chain
-from src.health_check import call_mcp
+from applications.api.src.langchain_module import chain
+from applications.api.src.health_check import call_mcp
 
 API_SERVER_HOST = os.getenv("API_SERVER_HOST", "localhost")
 API_SERVER_PORT = int(os.getenv("API_SERVER_PORT", "8081"))
@@ -50,7 +51,7 @@ def get_llm_response():
 
 
 @main_api_router.get("/mcp-healthcheck/{host}/{port}/{tool_name}")
-def mcp_healthcheck(host: str, port: int, tool_name: str):
+def mcp_healthcheck(host: str, port: int, tool_name: str, authrorization: Optional[str] = Header(None)):
     target_endpoint: str = f"http://{MCP_SERVER_HOST}:{MCP_SERVER_PORT}/sse"
     target_tool_name: str = "echo"
     if host and port:

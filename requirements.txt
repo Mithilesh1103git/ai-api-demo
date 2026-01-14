@@ -1,11 +1,12 @@
-fastmcp
-fastapi
-langchain_core
-langchain
-langchain-community
+pre-commit
 black
 isort
 flake8
 pytest
 pytest-asyncio
+fastmcp
+fastapi
+langchain_core
+langchain
+langchain-community
 openai

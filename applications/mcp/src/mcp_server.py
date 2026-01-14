@@ -9,7 +9,7 @@ import os
 from fastmcp import FastMCP
 from mcp.types import CallToolResult, TextContent
 
-from openai_client import ask_openai
+# from applications.mcp.openai.openai_responses import ask_openai
 
 print(os.getenv("MCP_SERVER_HOST"), os.getenv("MCP_SERVER_PORT"))
 
@@ -17,21 +17,21 @@ MCP_SERVER_HOST = os.getenv("MCP_SERVER_HOST")
 MCP_SERVER_PORT = os.getenv("MCP_SERVER_PORT", "8080")
 
 # mcp = FastMCP("LLM_APP", host=MCP_SERVER_HOST, port=MCP_SERVER_PORT)
-mcp = FastMCP("LLM_APP", host="localhost", port=int(MCP_SERVER_PORT))
+mcp_app = FastMCP("LLM_APP", host="localhost", port=int(MCP_SERVER_PORT))
 
 
-async def get_openai_response(prompt: str) -> str:
-    """
-    Function to get response from OpenAI. We will use this function to
-    get response from OpenAI and return it as a string.
-    This function can be used in real world scenarios where you want to get response from OpenAI
-    and return it as a string.
-    """
-    try:
-        response = await ask_openai(prompt)
-        return response
-    except Exception as e:
-        return f"Error: {str(e)}"
+# async def get_openai_response(prompt: str) -> str:
+#     """
+#     Function to get response from OpenAI. We will use this function to
+#     get response from OpenAI and return it as a string.
+#     This function can be used in real world scenarios where you want to get response from OpenAI
+#     and return it as a string.
+#     """
+#     try:
+#         response = await ask_openai(prompt)
+#         return response
+#     except Exception as e:
+#         return f"Error: {str(e)}"
 
 
 data_events = [
@@ -74,21 +74,21 @@ data_events = [
 ]
 
 
-@mcp.tool()
+@mcp_app.tool()
 def add(a: int, b: int) -> CallToolResult:
     """Add two numbers"""
     response_text = str(a + b)
     return CallToolResult(content=[TextContent(type="text", text=response_text)])
 
 
-@mcp.tool()
+@mcp_app.tool()
 def multiply(a: int, b: int) -> CallToolResult:
     """Multiply two numbers"""
     response_text = str(a * b)
     return CallToolResult(content=[TextContent(type="text", text=response_text)])
 
 
-@mcp.tool()
+@mcp_app.tool()
 def add_timestamp(text) -> CallToolResult:
     """Multiply tw o numbers"""
     timestamp_section = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -98,12 +98,8 @@ def add_timestamp(text) -> CallToolResult:
     return CallToolResult(content=[TextContent(type="text", text=response_text)])
 
 
-@mcp.tool()
+@mcp_app.tool()
 def echo() -> CallToolResult:
     """sample text generator. If real world scenario, this can be used to call OpenAI API."""
     response_text = json.dumps({"data_events": data_events})
     return CallToolResult(content=[TextContent(type="text", text=response_text)])
-
-
-if __name__ == "__main__":
-    mcp.run(transport="sse")

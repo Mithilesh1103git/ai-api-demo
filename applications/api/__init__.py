@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from src.api_server import main_api_router
+from applications.api.src.api_server import main_api_router
 from dotenv import load_dotenv
 
 load_dotenv(dotenv_path=r".env")

@@ -1,6 +1,5 @@
 from openai import OpenAI
 
-
 # Important Note: This following is openai implementation which can be used in real world scenarios.
 async def ask_openai(prompt, model="gpt-3.5-turbo", max_tokens=150) -> str:
     client = OpenAI()

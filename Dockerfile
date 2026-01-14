@@ -9,6 +9,8 @@ RUN useradd -m -s /bin/bash -u 1000 -g appuser appuser
 
 WORKDIR /app
 
+RUN export PYTHONPATH=.:$PYTHONPATH
+
 ENV API_SERVER_HOST="localhost"
 ENV API_SERVER_PORT="8081"
 ENV MCP_SERVER_HOST="localhost"
