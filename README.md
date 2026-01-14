@@ -19,3 +19,6 @@ forwarded by API server to MCP server for model outputs. I have simplified
 this with GET calls since I am using static responses and not real model responses.
 3. Responses are in format of SSE events which can be used both in API client
 or Web service client.
+4. OpenAI ChatGPT responses are currently disabled. This can be used to get response from OpenAI and return it as a string.
+This function can be used in real world scenarios where you want to get response from OpenAI.
+Function location: `applications/mcp/src/mcp_server.py` `get_openai_response()`
