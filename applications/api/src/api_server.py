@@ -17,6 +17,7 @@ MCP_SERVER_PORT = int(os.getenv("MCP_SERVER_PORT", "8080"))
 
 main_api_router = APIRouter(prefix="/api/v1")
 
+
 @main_api_router.get("/get-llm-response")
 def get_llm_response():
     """
@@ -51,7 +52,9 @@ def get_llm_response():
 
 
 @main_api_router.get("/mcp-healthcheck/{host}/{port}/{tool_name}")
-def mcp_healthcheck(host: str, port: int, tool_name: str, authrorization: Optional[str] = Header(None)):
+def mcp_healthcheck(
+    host: str, port: int, tool_name: str, authrorization: Optional[str] = Header(None)
+):
     target_endpoint: str = f"http://{MCP_SERVER_HOST}:{MCP_SERVER_PORT}/sse"
     target_tool_name: str = "echo"
     if host and port:
@@ -64,6 +67,7 @@ def mcp_healthcheck(host: str, port: int, tool_name: str, authrorization: Option
             prompt="test-echo-tool",
         )
     )
+
 
 # if __name__ == "__main__":
 #     uvicorn.run(app=app, port=API_SERVER_PORT)

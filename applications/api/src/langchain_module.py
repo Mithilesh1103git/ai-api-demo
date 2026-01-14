@@ -23,7 +23,7 @@ print(f"MCP host:port = {MCP_SERVER_HOST}:{MCP_SERVER_PORT} (langchain_module)")
 
 async def call_mcp(endpoint, tool_name, prompt):
     print(f"MCP_ENDPOINT_TYPE: {MCP_ENDPOINT_TYPE}")
-    if MCP_ENDPOINT_TYPE=="file":
+    if MCP_ENDPOINT_TYPE == "file":
         endpoint = "mcp_server.py"
     async with Client(endpoint) as client:
         # name must be just "echo", arguments must match the server function parameter

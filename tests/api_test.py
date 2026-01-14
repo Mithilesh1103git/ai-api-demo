@@ -9,10 +9,10 @@ from fastapi.testclient import TestClient
 app = FastAPI()
 
 origins = [
-    "http://localhost:80", 
-    "http://127.0.0.1:80", 
-    "http://0.0.0.0:80", 
-    "http://my.dev.experiments:80"
+    "http://localhost:80",
+    "http://127.0.0.1:80",
+    "http://0.0.0.0:80",
+    "http://my.dev.experiments:80",
 ]
 
 app.add_middleware(
@@ -22,6 +22,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 @app.get("/tests-llm-response")
 def get_llm_response():
@@ -35,11 +36,15 @@ def get_llm_response():
 
         yield "data: [done]\n\n"
 
-    return StreamingResponse(generate_response_content(), media_type="text/event-stream")
+    return StreamingResponse(
+        generate_response_content(), media_type="text/event-stream"
+    )
+
 
 @pytest.fixture
 def client():
     return TestClient(app)
+
 
 def test_llm_stream(client):
     response = client.get("/tests-llm-response")
