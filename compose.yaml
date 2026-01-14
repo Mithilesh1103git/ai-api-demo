@@ -16,7 +16,7 @@ services:
     working_dir: "/app"
     networks:
       - ai_mcp_api_network
-    command: ["python3", "applications/mcp/__init__.py"]
+    command: ["uv", "run", "applications/mcp/__init__.py"]
 
   api_server:
     build:

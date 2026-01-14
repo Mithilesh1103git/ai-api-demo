@@ -11,13 +11,7 @@ from mcp.types import CallToolResult, TextContent
 
 # from applications.mcp.openai.openai_responses import ask_openai
 
-print(os.getenv("MCP_SERVER_HOST"), os.getenv("MCP_SERVER_PORT"))
-
-MCP_SERVER_HOST = os.getenv("MCP_SERVER_HOST")
-MCP_SERVER_PORT = os.getenv("MCP_SERVER_PORT", "8080")
-
-# mcp = FastMCP("LLM_APP", host=MCP_SERVER_HOST, port=MCP_SERVER_PORT)
-mcp_app = FastMCP("LLM_APP", port=int(MCP_SERVER_PORT))
+mcp_app = FastMCP("LLM_APP")
 
 
 # async def get_openai_response(prompt: str) -> str:

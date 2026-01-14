@@ -1,3 +1,4 @@
+uv
 pre-commit
 black
 isort
