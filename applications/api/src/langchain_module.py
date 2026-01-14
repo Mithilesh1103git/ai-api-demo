@@ -12,19 +12,20 @@ from langchain_core.prompts import PromptTemplate
 
 API_SERVER_HOST = os.getenv("API_SERVER_HOST", "localhost")
 API_SERVER_PORT = int(os.getenv("API_SERVER_PORT", "8081"))
-MCP_ENDPOINT_TYPE = os.getenv("MCP_ENDPOINT_TYPE", None)
+MCP_ENDPOINT_TYPE = os.getenv("MCP_ENDPOINT_TYPE", "standard")
 MCP_SERVER_HOST = os.getenv("MCP_SERVER_HOST", "localhost")
 MCP_SERVER_PORT = int(os.getenv("MCP_SERVER_PORT", "8080"))
-
 
 print(f"API host:port = {API_SERVER_HOST}:{API_SERVER_PORT} (langchain_module)")
 print(f"MCP host:port = {MCP_SERVER_HOST}:{MCP_SERVER_PORT} (langchain_module)")
 
+MCP_ENDPOINT_URL = f"http://{MCP_SERVER_HOST}:{MCP_SERVER_PORT}/sse"
+
+if MCP_ENDPOINT_TYPE=="uvicorn":
+    MCP_ENDPOINT_URL = f"http://{MCP_SERVER_HOST}:{MCP_SERVER_PORT}/mcp"
+
 
 async def call_mcp(endpoint, tool_name, prompt):
-    print(f"MCP_ENDPOINT_TYPE: {MCP_ENDPOINT_TYPE}")
-    if MCP_ENDPOINT_TYPE == "file":
-        endpoint = "mcp_server.py"
     async with Client(endpoint) as client:
         # name must be just "echo", arguments must match the server function parameter
         # print(f"Printing prompt before calling mcp: {prompt}")
@@ -52,7 +53,7 @@ class FastMCPClientLLM(LLM):
     FastMCP client for LangChain.
     """
 
-    endpoint: str = f"http://{MCP_SERVER_HOST}:{MCP_SERVER_PORT}/sse"
+    endpoint: str = MCP_ENDPOINT_URL
     tool_name: str = "echo"
 
     @property
@@ -83,13 +84,13 @@ class FastMCPClientLLM(LLM):
 
 
 llm_add_timestamp = FastMCPClientLLM(
-    endpoint=f"http://{MCP_SERVER_HOST}:{MCP_SERVER_PORT}/sse",
+    endpoint=MCP_ENDPOINT_URL,
     tool_name="add_timestamp",
 )
 
 # Initialize your custom LLM
 main_llm = FastMCPClientLLM(
-    endpoint=f"http://{MCP_SERVER_HOST}:{MCP_SERVER_PORT}/sse", tool_name="echo"
+    endpoint=MCP_ENDPOINT_URL, tool_name="echo"
 )
 
 # Define a prompt template
