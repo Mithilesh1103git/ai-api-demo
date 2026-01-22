@@ -12,14 +12,23 @@ ENV API_SERVER_PORT="8081"
 ENV MCP_SERVER_HOST="localhost"
 ENV MCP_SERVER_PORT="8080"
 
-COPY requirements.txt .
+#---------------------------------------------------------------
+# python packages installation with pip
+
+ENV PIP_TMPDIR_PATH="/home/tmp_dir"
+ENV PIP_REQ_FILE="requirements.txt"
+
+COPY $PIP_REQ_FILE requirements.txt
 
 RUN pip cache purge
-RUN mkdir /home/tmp_dir
-RUN TMPDIR=/home/tmp_dir pip install --no-cache-dir -r requirements.txt
-RUN rm -r /home/tmp_dir
-RUN pip cache purge
+RUN mkdir $PIP_TMPDIR_PATH
+RUN TMPDIR=$PIP_TMPDIR_PATH pip install --no-cache-dir -r requirements.txt
+RUN rm -r requirements.txt
+RUN pip cache purge+
+
 RUN rm requirements.txt
+
+#---------------------------------------------------------------
 
 WORKDIR /app
 
@@ -29,6 +38,6 @@ COPY . .
 RUN chown -R appuser:appuser /app
 USER appuser
 
-EXPOSE 8080 8081
+EXPOSE 8080/tcp 8081/tcp
 
 #ENTRYPOINT ["top", "-b"]

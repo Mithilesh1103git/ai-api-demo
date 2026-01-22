@@ -9,6 +9,8 @@ services:
       - "8080:8080"
     environment:
       PYTHONPATH: ".:${PYTHONPATH}"
+      PIP_TMPDIR_PATH: "/home/tmp_dir"
+      PIP_REQ_FILE: "requirements.txt"
       API_SERVER_HOST: "api_server"
       API_SERVER_PORT: "8081"
       MCP_SERVER_HOST: "localhost"
@@ -31,6 +33,8 @@ services:
       - "8081:8081"
     environment:
       PYTHONPATH: ".:${PYTHONPATH}"
+      PIP_TMPDIR_PATH: "/home/tmp_dir"
+      PIP_REQ_FILE: "requirements.txt"
       API_SERVER_HOST: "localhost"
       API_SERVER_PORT: "8081"
       MCP_SERVER_HOST: "mcp_server"
