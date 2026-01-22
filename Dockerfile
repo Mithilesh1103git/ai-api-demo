@@ -20,7 +20,7 @@ ENV PIP_REQ_FILE="requirements.txt"
 
 COPY $PIP_REQ_FILE requirements.txt
 
-RUN python -m pip install --upgrade pip
+RUN python3 -m pip install --upgrade pip
 RUN pip cache purge
 RUN mkdir $PIP_TMPDIR_PATH
 RUN TMPDIR=$PIP_TMPDIR_PATH pip install --no-cache-dir -r requirements.txt
