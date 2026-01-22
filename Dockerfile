@@ -27,8 +27,6 @@ RUN TMPDIR=$PIP_TMPDIR_PATH pip install --no-cache-dir -r requirements.txt
 RUN rm -r requirements.txt
 RUN pip cache purge
 
-RUN rm requirements.txt
-
 #---------------------------------------------------------------
 
 WORKDIR /app
