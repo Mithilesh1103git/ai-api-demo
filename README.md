@@ -1,15 +1,14 @@
 
 Description: This is an AI model deployment using FastMCP, Langchain, and FastAPI, with MCP, chaining, and API implementation. It can be used as a universal agent for all tasks that can be optimized using an LLM-based agent. In the repository, the current response is static for demo purposes; however, in a practical scenario, any open-source or commercial proprietary LLM API can be used to generate responses. Please note that this is the simplest implementation for demo purposes. In a production environment, complex elements like memory and context management will be necessary.
 
+Main apps directory: `/applications`
+
 Usage SOP:
-
-Source code: `/src`
-
-Step 1: First, run the MCP server with the command: `python3 src/mcp_server.py`
-
-Step 2: Secondly, run api server with the command: `uvicorn --host 0.0.0.0 --port 8081 src:app`
-
-Step 3: You can call api in localhost with the following command: `curl -X GET http://localhost:8081/api/v1/get-llm-response`
+Step 1: First, run the MCP server with the command: `uvicorn --host=0.0.0.0 --port=8080 applications.mcp:app`
+        (alternatively, you can also use command: `python3 src/mcp_server.py`)
+Step 2: Secondly, run api server with the command: `uvicorn --host 0.0.0.0 --port 8081 applications.api:app`
+Step 3: You can call api with the following command: `curl -X GET http://<your-host>:8081/api/v1/get-llm-response`
+        (for localhost, you can use the command: `curl -X GET http://localhost:8081/api/v1/get-llm-response`)
 
 Note:
 1. In real world scenario, the LLM MCP server would be calling hosted models or paid models like OpenAI GPT. In this version, I am using a simple static response to all queries because hosting a model is not possible on a local system due to the size and resources required.
